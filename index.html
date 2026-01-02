@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>韓國旅行計畫 🇰🇷</title>
+    <style>
+        /* CSS: 這裡負責讓網頁變漂亮 */
+        :root {
+            --primary-color: #FF6B6B; /* 韓系粉橘色 */
+            --bg-color: #F8F9FA;
+            --text-color: #333;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px; /* 避開底部導航 */
+        }
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            padding: 20px;
+            display: none; /* 預設隱藏所有頁面 */
+            animation: fadeIn 0.3s;
+        }
+        .active {
+            display: block; /* 顯示當前頁面 */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 行程卡片樣式 */
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+        .time { font-weight: bold; color: var(--primary-color); }
+        
+        /* 清單樣式 */
+        .todo-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+        .todo-item input[type="checkbox"] {
+            transform: scale(1.5);
+            margin-right: 15px;
+        }
+        .checked { text-decoration: line-through; color: #999; }
+
+        /* 記帳樣式 */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+        }
+        button.add-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .total-banner {
+            background: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        /* 底部導航列 */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-item {
+            font-size: 0.9rem;
+            color: #999;
+            text-align: center;
+            flex: 1;
+        }
+        .nav-item.active-nav {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">🇰🇷 首爾自由行</div>
+
+    <div id="page-schedule" class="container active">
+        <h3>Day 1: 抵達與弘大</h3>
+        <div class="card">
+            <div class="time">14:00</div>
+            <div>✈️ 仁川機場落地</div>
+        </div>
+        <div class="card">
+            <div class="time">16:30</div>
+            <div>🏨 飯店 Check-in (L7弘大)</div>
+        </div>
+        <div class="card">
+            <div class="time">18:00</div>
+            <div>🍖 晚餐：豬腳小姐 (必吃蒜味)</div>
+        </div>
+
+        <h3>Day 2: 景福宮與韓屋</h3>
+        <div class="card">
+            <div class="time">10:00</div>
+            <div>🎎 景福宮穿韓服</div>
+        </div>
+    </div>
+
+    <div id="page-list" class="container">
+        <h3>🎒 行前準備</h3>
+        <div class="todo-item"><input type="checkbox" onclick="toggleCheck(this)"><span>護照 & 機票影本</span></div>
+        <div class="todo-item"><input type="checkbox" onclick="toggleCheck(this)"><span>轉接頭 (兩孔圓形)</span></div>
+        <div class="todo-item"><input type="checkbox" onclick="toggleCheck(this)"><span>網卡 / ESIM 設定</span></div>
+        <div class="todo-item"><input type="checkbox" onclick="toggleCheck(this)"><span>牙刷牙膏 (韓國飯店通常不附)</span></div>
+    </div>
+
+    <div id="page-money" class="container">
+        <h3>💸 記帳小幫手</h3>
+        <div class="total-banner">
+            總花費: <span id="total-display">0</span> TWD
+        </div>
+        
+        <div class="input-group">
+            <input type="text" id="item-name" placeholder="項目 (如: 咖啡)">
+        </div>
+        <div class="input-group">
+            <input type="number" id="item-price" placeholder="金額 (韓幣 KRW)">
+            <button class="add-btn" onclick="addExpense()">記帳</button>
+        </div>
+        <p style="font-size: 0.8rem; color: #666;">* 自動以匯率 0.024 換算台幣</p>
+
+        <div id="expense-list">
+            </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active-nav" onclick="switchPage('page-schedule', this)">📅 行程</div>
+        <div class="nav-item" onclick="switchPage('page-list', this)">✅ 清單</div>
+        <div class="nav-item" onclick="switchPage('page-money', this)">💰 算錢</div>
+    </div>
+
+    <script>
+        // JavaScript: 這裡負責功能邏輯
+
+        // 1. 切換頁面功能
+        function switchPage(pageId, navElement) {
+            // 隱藏所有頁面
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            // 顯示選中頁面
+            document.getElementById(pageId).classList.add('active');
+            
+            // 更新底部按鈕顏色
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active-nav'));
+            navElement.classList.add('active-nav');
+        }
+
+        // 2. 清單打勾樣式
+        function toggleCheck(checkbox) {
+            const text = checkbox.nextElementSibling;
+            if(checkbox.checked) {
+                text.classList.add('checked');
+            } else {
+                text.classList.remove('checked');
+            }
+        }
+
+        // 3. 記帳功能 (含匯率換算)
+        let totalTWD = 0;
+        const exchangeRate = 0.024; // 假設匯率
+
+        function addExpense() {
+            const nameInput = document.getElementById('item-name');
+            const priceInput = document.getElementById('item-price');
+            const list = document.getElementById('expense-list');
+            const totalDisplay = document.getElementById('total-display');
+
+            const name = nameInput.value;
+            const priceKRW = parseFloat(priceInput.value);
+
+            if(name === "" || isNaN(priceKRW)) {
+                alert("請輸入項目和金額喔！");
+                return;
+            }
+
+            // 計算台幣
+            const priceTWD = Math.round(priceKRW * exchangeRate);
+            totalTWD += priceTWD;
+
+            // 新增一筆紀錄到畫面
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'card';
+            itemDiv.style.borderLeft = "5px solid #4CAF50"; // 記帳用綠色
+            itemDiv.innerHTML = `
+                <div style="display:flex; justify-content:space-between;">
+                    <strong>${name}</strong>
+                    <span>₩${priceKRW}</span>
+                </div>
+                <div style="text-align:right; color:#888; font-size:0.9rem;">
+                    約 NT$ ${priceTWD}
+                </div>
+            `;
+            
+            // 插入到列表最上方
+            list.insertBefore(itemDiv, list.firstChild);
+
+            // 更新總金額
+            totalDisplay.innerText = totalTWD.toLocaleString();
+
+            // 清空輸入框
+            nameInput.value = '';
+            priceInput.value = '';
+        }
+    </script>
+</body>
+</html>
