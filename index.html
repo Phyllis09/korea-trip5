@@ -6,292 +6,429 @@
     <title>Just Trust Me Bro</title>
     <style>
         :root {
-            --primary-blue: #4A90E2; /* 頂部藍色 */
-            --bg-color: #F5F7FA;
-            --text-main: #333;
+            --primary-blue: #2c3e50; /* 深藍色主調 */
+            --accent-color: #e74c3c; /* 重點跳色 */
+            --bg-color: #f8f9fa;
+            --box-blue: #e3f2fd;
+            --box-yellow: #fff9c4;
             --text-gray: #666;
-            --box-blue: #E8F0FE; /* 交通資訊底色 */
-            --box-yellow: #FFF8E1; /* 提醒資訊底色 */
-            --nav-border: #E0E0E0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: white;
-            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
             margin: 0;
             padding: 0;
-            padding-bottom: 90px; /* 避開底部導航 */
+            padding-bottom: 90px;
         }
 
-        /* --- 頂部設計 --- */
+        /* --- Header --- */
         .header {
-            background: linear-gradient(180deg, #5B9FEA 0%, #4A90E2 100%);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); /* 韓系漸層 */
             color: white;
-            padding: 30px 20px 20px;
+            padding: 40px 20px 30px;
             text-align: center;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: bold;
-        }
-        .header p {
-            margin: 8px 0 0;
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
+        .header h1 { margin: 0; font-size: 1.6rem; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-size: 0.9rem; }
 
-        /* --- 頁面容器 --- */
-        .container {
-            display: none; /* 預設隱藏 */
-            padding: 20px;
-            animation: fadeIn 0.3s;
-        }
-        .container.active {
-            display: block; /* 顯示當前頁面 */
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* --- 容器與分頁 --- */
+        .container { display: none; padding: 20px; animation: fadeIn 0.4s; }
+        .container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Day 標籤 --- */
-        .day-badge {
+        /* --- 日期標題 --- */
+        .date-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            padding: 15px 0;
+            z-index: 10;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .day-tag {
             background: var(--primary-blue);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
             font-weight: bold;
-            display: inline-block;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+            margin-right: 8px;
         }
-        .day-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            display: inline-block;
-            margin-left: 10px;
-            color: #333;
-        }
+        .day-title { font-weight: bold; color: #333; font-size: 1.1rem; }
 
-        /* --- 時間軸樣式 --- */
+        /* --- 時間軸設計 --- */
         .timeline {
-            border-left: 3px solid #E0E0E0; /* 左邊灰線 */
+            border-left: 3px solid #ddd;
             margin-left: 10px;
             padding-left: 25px;
-            position: relative;
         }
-
-        .timeline-item {
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        /* 時間軸上的藍色圓圈 */
+        .timeline-item { position: relative; margin-bottom: 35px; }
         .timeline-circle {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: white;
-            border: 3px solid var(--primary-blue);
+            border: 3px solid var(--accent-color);
             border-radius: 50%;
             position: absolute;
-            left: -33px; /* 調整圓圈位置對齊灰線 */
-            top: 5px;
+            left: -34px;
+            top: 6px;
         }
+        .time { color: var(--accent-color); font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
+        .activity { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; }
+        .desc { font-size: 0.95rem; color: var(--text-gray); line-height: 1.6; }
 
-        .time-range {
-            color: var(--primary-blue);
-            font-weight: bold;
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-        }
-
-        .activity-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .activity-desc {
-            font-size: 0.95rem;
-            color: var(--text-gray);
-            line-height: 1.5;
-            margin-bottom: 10px;
-        }
-
-        /* --- 藍色資訊卡 (交通) --- */
-        .info-box {
-            background-color: var(--box-blue);
-            border-radius: 12px;
-            padding: 15px;
+        /* --- 資訊卡片 --- */
+        .info-box, .tip-box {
+            padding: 12px 15px;
+            border-radius: 10px;
             margin-top: 10px;
             font-size: 0.9rem;
-            color: #2c3e50;
         }
-        .info-box strong {
-            color: var(--primary-blue);
-        }
+        .info-box { background: var(--box-blue); color: #1565c0; }
+        .tip-box { background: var(--box-yellow); color: #f57f17; border-left: 4px solid #fbc02d; }
 
-        /* --- 黃色資訊卡 (提醒) --- */
-        .tip-box {
-            background-color: var(--box-yellow);
-            border-radius: 12px;
-            padding: 15px;
+        /* --- 導航按鈕 --- */
+        .nav-btn {
+            display: inline-block;
             margin-top: 10px;
-            font-size: 0.9rem;
-            color: #7f6000;
-            border-left: 4px solid #FFD54F;
-        }
-
-        /* --- 綠色導航按鈕 --- */
-        .btn-nav {
-            display: block;
-            width: 100%;
-            border: 1px solid #28a745;
-            color: #28a745;
-            background: white;
-            text-align: center;
-            padding: 8px 0;
+            padding: 6px 15px;
+            border: 1px solid #ddd;
             border-radius: 20px;
-            margin-top: 10px;
             text-decoration: none;
-            font-size: 0.9rem;
-        }
-        .btn-nav:active {
-            background: #f0fff4;
+            color: #555;
+            font-size: 0.85rem;
+            background: white;
         }
 
-        /* --- 底部導航列 --- */
-        .bottom-nav {
+        /* --- 底部選單 --- */
+        .bottom-bar {
             position: fixed;
             bottom: 0;
-            left: 0;
             width: 100%;
             background: white;
-            border-top: 1px solid var(--nav-border);
+            border-top: 1px solid #eee;
             display: flex;
-            justify-content: space-around;
-            padding: 10px 0 25px 0; /* 適配 iPhone 底部 */
+            padding-bottom: 20px; /* iPhone bar 空間 */
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 100;
         }
-        .nav-item {
+        .tab-item {
+            flex: 1;
             text-align: center;
+            padding: 12px 0;
             color: #999;
-            font-size: 0.75rem;
-            cursor: pointer;
+            font-size: 0.8rem;
         }
-        .nav-item.active-tab {
-            color: var(--primary-blue);
-        }
-        .nav-icon {
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 2px;
-        }
+        .tab-item.active { color: var(--primary-blue); font-weight: bold; }
+        .tab-icon { display: block; font-size: 1.4rem; margin-bottom: 3px; }
+
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>🇰🇷 釜山 5人團精實攻略</h1>
-        <p>1/10 (五) - 1/12 (日) | 吃貨與美照之旅</p>
+        <h1>🇰🇷 0924 首爾釜山行</h1>
+        <p>1/6 - 1/13 | 8天7夜爆肝行程</p>
     </div>
 
-    <div id="page-schedule" class="container active">
+    <div id="seoul-page" class="container active">
         
-        <div style="margin-bottom: 20px;">
-            <span class="day-badge">Day 1</span>
-            <span class="day-title">1/10 (五) 西面落地 & 南浦洞</span>
+        <div class="date-header">
+            <span class="day-tag">Day 1</span>
+            <span class="day-title">1/6 (一) 抵達首爾 & 明洞</span>
         </div>
-
         <div class="timeline">
             <div class="timeline-item">
                 <div class="timeline-circle"></div>
-                <div class="time-range">06:10 - 08:30</div>
-                <div class="activity-title">✈️ 抵達機場 & 寄放行李</div>
-                <div class="activity-desc">
-                    入境後直接去計程車招呼站。到飯店先寄放行李（還不能進房）。
+                [cite_start]<div class="time">15:55 - 19:45 [cite: 1]</div>
+                [cite_start]<div class="activity">✈️ 小港 -> 金浦機場 [cite: 1]</div>
+                <div class="desc">
+                    抵達後儲值 WOWPASS，搭乘機場快線 (AREX) 前往首爾站。
                 </div>
-                
                 <div class="info-box">
-                    <strong>🚕 機場 ⮕ 西面飯店</strong><br>
-                    車程：約 30-40 分鐘<br>
-                    車資：約 ₩18,000 - 22,000 (5人分兩台車)
+                    [cite_start]🚇 <strong>交通：</strong>機場快線 -> 首爾站 -> 轉藍線(4號線) -> 忠武路站 [cite: 1]
                 </div>
-
-                <a href="#" class="btn-nav">📍 Google Map 導航</a>
             </div>
 
             <div class="timeline-item">
                 <div class="timeline-circle"></div>
-                <div class="time-range">09:00 - 10:30</div>
-                <div class="activity-title">🥣 早餐：松亭3代豬肉湯飯</div>
-                <div class="activity-desc">
-                    湯本身不鹹，記得加桌上鹹蝦醬調味。
-                    吃完後去旁邊「西面老奶奶」換錢。
+                <div class="time">21:00</div>
+                <div class="activity">🏨 飯店 Check-in & 換錢</div>
+                <div class="desc">
+                    [cite_start]住宿：斯德拉克 (Stayrak Hotel) [cite: 1]<br>
+                    [cite_start]換錢：明洞大使館 (匯率較好)，明洞站 5 號出口。 [cite: 1]
                 </div>
+            </div>
 
-                <div class="tip-box">
-                    💡 換錢請準備台幣/美金，護照記得隨身帶。
-                </div>
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">22:00</div>
+                <div class="activity">🍗 明洞晚餐 & 逛街</div>
+                [cite_start]<div class="desc">明洞商圈吃燒肉或炸雞，逛大創 (Daiso)。 [cite: 1]</div>
+            </div>
+        </div>
 
-                <a href="#" class="btn-nav">📍 Naver Map 導航</a>
+        <div class="date-header">
+            <span class="day-tag">Day 2</span>
+            <span class="day-title">1/7 (二) 古宮、弘大與東大門</span>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">10:30</div>
+                [cite_start]<div class="activity">👘 景福宮 (穿韓服) [cite: 1]</div>
+                <div class="info-box">🚕 交通：忠武路搭計程車或地鐵前往</div>
             </div>
             
-             <div class="timeline-item">
+            <div class="timeline-item">
                 <div class="timeline-circle"></div>
-                <div class="time-range">11:00 - 13:00</div>
-                <div class="activity-title">🛍️ 南浦洞逛街</div>
-                <div class="activity-desc">
-                    樂天百貨頂樓看風景，BIFF 廣場吃黑糖餅。
+                <div class="time">11:00</div>
+                [cite_start]<div class="activity">🥣 午餐：無垢屋 (雞湯) [cite: 1]</div>
+                [cite_start]<div class="tip-box">💡 11點營業，需現場取號，人很多！ [cite: 1]</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">14:00</div>
+                [cite_start]<div class="activity">🎮 LoL Park & T1 網咖 [cite: 1]</div>
+                <div class="desc">
+                    [cite_start]子庭指定行程！朝聖 LoL Park，接著去弘大入口站 1 號出口旁的 T1 網咖。 [cite: 1]
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">16:00</div>
+                [cite_start]<div class="activity">🛍️ 弘大商圈 & 望遠市場 [cite: 1]</div>
+                <div class="desc">
+                    弘大逛街，或是去望遠市場吃美食。
+                </div>
+                [cite_start]<div class="tip-box">🍎 望遠市場必買：水果 (好吃又便宜)！ [cite: 1]</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">19:00</div>
+                [cite_start]<div class="activity">🌃 東大門現代百貨 & 晚餐 [cite: 1]</div>
+                <div class="desc">
+                    [cite_start]晚餐：一隻雞或燒肉。晚上可去南山公園看首爾塔 (搭纜車)。 [cite: 1]
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="page-list" class="container">
-        <h2>🎒 打包清單</h2>
-        <p>這邊可以放你的 Check List...</p>
-    </div>
-
-    <div id="page-money" class="container">
-        <h2>💰 記帳區</h2>
-        <p>這邊放記帳功能...</p>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-item active-tab" onclick="switchPage('page-schedule', this)">
-            <span class="nav-icon">📅</span>
-            行程
+        <div class="date-header">
+            <span class="day-tag">Day 3</span>
+            <span class="day-title">1/8 (三) 江南、狎鷗亭</span>
         </div>
-        <div class="nav-item" onclick="switchPage('page-list', this)">
-            <span class="nav-icon">🎒</span>
-            清單
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">10:30</div>
+                [cite_start]<div class="activity">🥯 狎鷗亭 & 倫敦貝果博物館 [cite: 1]</div>
+                [cite_start]<div class="desc">很有名可吃看看，中間可塞其他美食。 [cite: 1]</div>
+                <div class="info-box">🚇 交通：忠武路 -> 狎鷗亭站</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Afternoon</div>
+                [cite_start]<div class="activity">📚 星空圖書館 & K-STAR ROAD [cite: 1]</div>
+                <div class="desc">
+                    [cite_start]COEX 星空圖書館拍照，逛江南韓流明星街。 [cite: 1]
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Dinner</div>
+                [cite_start]<div class="activity">🥩 晚餐：馬場洞韓牛 [cite: 1]</div>
+                [cite_start]<div class="desc">營業時間 11:00-23:00，來韓國就是要吃韓牛！ [cite: 1]</div>
+            </div>
         </div>
-        <div class="nav-item" onclick="switchPage('page-money', this)">
-            <span class="nav-icon">💸</span>
-            算錢
+        
+        <div style="text-align:center; padding: 20px; color:#aaa;">⬇️ 點擊下方按鈕切換釜山行程 ⬇️</div>
+    </div>
+
+
+    <div id="busan-page" class="container">
+        
+        <div class="date-header">
+            <span class="day-tag">Day 4</span>
+            <span class="day-title">1/9 (四) 移動日：前往釜山</span>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                [cite_start]<div class="time">10:00 - 10:58 [cite: 1]</div>
+                [cite_start]<div class="activity">🚅 首爾站 -> 釜山站 (KTX) [cite: 1]</div>
+                [cite_start]<div class="desc">10:00 退房前往首爾站，搭乘 10:58 KTX (025車次)。 [cite: 1]</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">14:30</div>
+                [cite_start]<div class="activity">🏨 釜山 Check-in [cite: 1]</div>
+                <div class="desc">
+                    [cite_start]抵達釜山站 (13:42)，前往住宿：The Van Hotel。 [cite: 1]
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Afternoon</div>
+                [cite_start]<div class="activity">🌊 海雲台 & 冬柏島 [cite: 1]</div>
+                <div class="desc">
+                    [cite_start]海雲台海水浴場散步，走冬柏島步道。逛新世界百貨。 [cite: 1]
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Dinner</div>
+                [cite_start]<div class="activity">🍢 海雲台傳統市場 [cite: 1]</div>
+                <div class="desc">
+                    [cite_start]晚餐在市場解決 (辣炒章魚、炸雞、糖餅)。 [cite: 1]
+                </div>
+            </div>
+        </div>
+
+        <div class="date-header">
+            <span class="day-tag">Day 5</span>
+            <span class="day-title">1/10 (五) 膠囊列車 & 機張</span>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Morning</div>
+                [cite_start]<div class="activity">🚋 天空膠囊列車 / 海岸列車 [cite: 3]</div>
+                [cite_start]<div class="desc">尾浦 -> 青沙浦。記得預先訂票 (一趟約30分)。 [cite: 3]</div>
+                [cite_start]<div class="tip-box">💡 景點：青沙浦平交道 (灌籃高手場景)、天空步道。 [cite: 3]</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Lunch</div>
+                [cite_start]<div class="activity">🦀 午餐：機張市場吃蟹 [cite: 3]</div>
+                [cite_start]<div class="desc">搭計程車或公車前往機張，吃長腳蟹/烤貝類。 [cite: 3]</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Afternoon</div>
+                [cite_start]<div class="activity">🏎️ Skyline Luge 斜坡滑車 [cite: 3]</div>
+                [cite_start]<div class="desc">旁邊還有樂天 Outlet 可以逛。 [cite: 3]</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Night</div>
+                [cite_start]<div class="activity">🌉 廣安里大橋夜景 [cite: 3]</div>
+                [cite_start]<div class="desc">看無人機秀 (週六通常有，確認時間)，吃豬排或炸雞。 [cite: 3]</div>
+            </div>
+        </div>
+
+        <div class="date-header">
+            <span class="day-tag">Day 6</span>
+            <span class="day-title">1/11 (六) 南浦洞 & 市場巡禮</span>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">11:00</div>
+                [cite_start]<div class="activity">🏨 換飯店：前往南浦洞 [cite: 3]</div>
+                [cite_start]<div class="desc">退房，直奔南浦飯店寄放行李。 [cite: 3]</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Daytime</div>
+                [cite_start]<div class="activity">🐙 札嘎其市場 & BIFF 廣場 [cite: 3]</div>
+                <div class="desc">
+                    [cite_start]午餐吃海鮮，下午逛光復路商店街、國際市場、富平市場。 [cite: 3]
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Night</div>
+                [cite_start]<div class="activity">🗼 釜山塔夜景 [cite: 3]</div>
+            </div>
+        </div>
+        
+        <div class="date-header">
+            <span class="day-tag">Day 7</span>
+            <span class="day-title">1/12 (日) 甘川洞 & 松島</span>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Morning</div>
+                [cite_start]<div class="activity">🏘️ 甘川洞文化村 [cite: 3]</div>
+                [cite_start]<div class="info-box">🚕 交通：計程車或地鐵土城站轉公車。 [cite: 3]</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time">Afternoon</div>
+                [cite_start]<div class="activity">🚠 松島纜車 & 龍宮雲橋 [cite: 3]</div>
+                <div class="desc">
+                    [cite_start]這天行程比較鬆，也可以去白淺灘文化村喝咖啡。 [cite: 3]
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 50px;"></div> </div>
+
+    <div id="list-page" class="container">
+        <h2>🎒 必備清單</h2>
+        <div class="tip-box" style="margin-bottom: 20px;">
+            記得出發前檢查護照效期 (至少6個月)！
+        </div>
+        
+        <label style="display:block; padding:10px; border-bottom:1px solid #eee;">
+            <input type="checkbox"> 護照 & 機票截圖
+        </label>
+        <label style="display:block; padding:10px; border-bottom:1px solid #eee;">
+            <input type="checkbox"> 轉接頭 (韓國圓孔)
+        </label>
+        <label style="display:block; padding:10px; border-bottom:1px solid #eee;">
+            <input type="checkbox"> WOWPASS 卡 / 現金
+        </label>
+        <label style="display:block; padding:10px; border-bottom:1px solid #eee;">
+            <input type="checkbox"> 網卡 (eSIM)
+        </label>
+        <label style="display:block; padding:10px; border-bottom:1px solid #eee;">
+            <input type="checkbox"> 牙刷牙膏 (環保不提供)
+        </label>
+    </div>
+
+    <div class="bottom-bar">
+        <div class="tab-item active" onclick="switchPage('seoul-page', this)">
+            <span class="tab-icon">🇰🇷</span>首爾行程
+        </div>
+        <div class="tab-item" onclick="switchPage('busan-page', this)">
+            <span class="tab-icon">🌊</span>釜山行程
+        </div>
+        <div class="tab-item" onclick="switchPage('list-page', this)">
+            <span class="tab-icon">🎒</span>準備清單
         </div>
     </div>
 
     <script>
-        // 切換頁面功能
-        function switchPage(pageId, navElement) {
+        function switchPage(pageId, tabElement) {
             // 隱藏所有頁面
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
             // 顯示目標頁面
             document.getElementById(pageId).classList.add('active');
             
-            // 底部按鈕變色
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active-tab'));
-            navElement.classList.add('active-tab');
+            // 處理底部按鈕樣式
+            document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+            tabElement.classList.add('active');
+            
+            // 如果切換頁面，自動捲到最上方
+            window.scrollTo(0, 0);
         }
     </script>
-
 </body>
 </html>
