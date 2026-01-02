@@ -3,255 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Just Trust Me Bro</title>
+    <title>釜山 5人團精實攻略</title>
     <style>
-        /* CSS: 這裡負責讓網頁變漂亮 */
         :root {
-            --primary-color: #FF6B6B; /* 韓系粉橘色 */
-            --bg-color: #F8F9FA;
-            --text-color: #333;
+            --primary-blue: #4A90E2; /* 頂部藍色 */
+            --bg-color: #F5F7FA;
+            --text-main: #333;
+            --text-gray: #666;
+            --box-blue: #E8F0FE; /* 交通資訊底色 */
+            --box-yellow: #FFF8E1; /* 提醒資訊底色 */
+            --nav-border: #E0E0E0;
         }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: white;
+            color: var(--text-main);
             margin: 0;
             padding: 0;
-            padding-bottom: 80px; /* 避開底部導航 */
+            padding-bottom: 90px; /* 避開底部導航 */
         }
+
+        /* --- 頂部設計 --- */
         .header {
-            background: var(--primary-color);
+            background: linear-gradient(180deg, #5B9FEA 0%, #4A90E2 100%);
             color: white;
-            padding: 20px;
+            padding: 30px 20px 20px;
             text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        .header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 8px 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* --- 頁面容器 --- */
         .container {
+            display: none; /* 預設隱藏 */
             padding: 20px;
-            display: none; /* 預設隱藏所有頁面 */
             animation: fadeIn 0.3s;
         }
-        .active {
+        .container.active {
             display: block; /* 顯示當前頁面 */
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 行程卡片樣式 */
-        .card {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--primary-color);
+        /* --- Day 標籤 --- */
+        .day-badge {
+            background: var(--primary-blue);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
         }
-        .time { font-weight: bold; color: var(--primary-color); }
-        
-        /* 清單樣式 */
-        .todo-item {
+        .day-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+            color: #333;
+        }
+
+        /* --- 時間軸樣式 --- */
+        .timeline {
+            border-left: 3px solid #E0E0E0; /* 左邊灰線 */
+            margin-left: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .timeline-item {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        /* 時間軸上的藍色圓圈 */
+        .timeline-circle {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            position: absolute;
+            left: -33px; /* 調整圓圈位置對齊灰線 */
+            top: 5px;
+        }
+
+        .time-range {
+            color: var(--primary-blue);
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            background: white;
-            padding: 15px;
+            gap: 5px;
+        }
+
+        .activity-desc {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            line-height: 1.5;
             margin-bottom: 10px;
-            border-radius: 10px;
         }
-        .todo-item input[type="checkbox"] {
-            transform: scale(1.5);
-            margin-right: 15px;
-        }
-        .checked { text-decoration: line-through; color: #999; }
 
-        /* 記帳樣式 */
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        input {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            width: 100%;
-            font-size: 16px;
-        }
-        button.add-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-        .total-banner {
-            background: #333;
-            color: white;
+        /* --- 藍色資訊卡 (交通) --- */
+        .info-box {
+            background-color: var(--box-blue);
+            border-radius: 12px;
             padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.2rem;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+        .info-box strong {
+            color: var(--primary-blue);
         }
 
-        /* 底部導航列 */
-        .nav-bar {
+        /* --- 黃色資訊卡 (提醒) --- */
+        .tip-box {
+            background-color: var(--box-yellow);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #7f6000;
+            border-left: 4px solid #FFD54F;
+        }
+
+        /* --- 綠色導航按鈕 --- */
+        .btn-nav {
+            display: block;
+            width: 100%;
+            border: 1px solid #28a745;
+            color: #28a745;
+            background: white;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 20px;
+            margin-top: 10px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .btn-nav:active {
+            background: #f0fff4;
+        }
+
+        /* --- 底部導航列 --- */
+        .bottom-nav {
             position: fixed;
             bottom: 0;
+            left: 0;
             width: 100%;
             background: white;
+            border-top: 1px solid var(--nav-border);
             display: flex;
             justify-content: space-around;
-            padding: 15px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            padding: 10px 0 25px 0; /* 適配 iPhone 底部 */
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
         }
         .nav-item {
-            font-size: 0.9rem;
-            color: #999;
             text-align: center;
-            flex: 1;
+            color: #999;
+            font-size: 0.75rem;
+            cursor: pointer;
         }
-        .nav-item.active-nav {
-            color: var(--primary-color);
-            font-weight: bold;
+        .nav-item.active-tab {
+            color: var(--primary-blue);
+        }
+        .nav-icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 2px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">首爾自由行</div>
+    <div class="header">
+        <h1>🇰🇷 釜山 5人團精實攻略</h1>
+        <p>1/10 (五) - 1/12 (日) | 吃貨與美照之旅</p>
+    </div>
 
     <div id="page-schedule" class="container active">
-        <h3>Day 1: 抵達與弘大</h3>
-        <div class="card">
-            <div class="time">14:00</div>
-            <div>✈️ 仁川機場落地</div>
-        </div>
-        <div class="card">
-            <div class="time">16:30</div>
-            <div>🏨 飯店 Check-in (L7弘大)</div>
-        </div>
-        <div class="card">
-            <div class="time">18:00</div>
-            <div>🍖 晚餐：豬腳小姐 (必吃蒜味)</div>
+        
+        <div style="margin-bottom: 20px;">
+            <span class="day-badge">Day 1</span>
+            <span class="day-title">1/10 (五) 西面落地 & 南浦洞</span>
         </div>
 
-        <h3>Day 2: 景福宮與韓屋</h3>
-        <div class="card">
-            <div class="time">10:00</div>
-            <div>🎎 景福宮穿韓服</div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time-range">06:10 - 08:30</div>
+                <div class="activity-title">✈️ 抵達機場 & 寄放行李</div>
+                <div class="activity-desc">
+                    入境後直接去計程車招呼站。到飯店先寄放行李（還不能進房）。
+                </div>
+                
+                <div class="info-box">
+                    <strong>🚕 機場 ⮕ 西面飯店</strong><br>
+                    車程：約 30-40 分鐘<br>
+                    車資：約 ₩18,000 - 22,000 (5人分兩台車)
+                </div>
+
+                <a href="#" class="btn-nav">📍 Google Map 導航</a>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time-range">09:00 - 10:30</div>
+                <div class="activity-title">🥣 早餐：松亭3代豬肉湯飯</div>
+                <div class="activity-desc">
+                    湯本身不鹹，記得加桌上鹹蝦醬調味。
+                    吃完後去旁邊「西面老奶奶」換錢。
+                </div>
+
+                <div class="tip-box">
+                    💡 換錢請準備台幣/美金，護照記得隨身帶。
+                </div>
+
+                <a href="#" class="btn-nav">📍 Naver Map 導航</a>
+            </div>
+            
+             <div class="timeline-item">
+                <div class="timeline-circle"></div>
+                <div class="time-range">11:00 - 13:00</div>
+                <div class="activity-title">🛍️ 南浦洞逛街</div>
+                <div class="activity-desc">
+                    樂天百貨頂樓看風景，BIFF 廣場吃黑糖餅。
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="page-list" class="container">
-        <h3>🎒 行前準備</h3>
-        <div class="todo-item"><input type="checkbox" onclick="toggleCheck(this)"><span>護照 & 機票影本</span></div>
-        <div class="todo-item"><input type="checkbox" onclick="toggleCheck(this)"><span>轉接頭 (兩孔圓形)</span></div>
-        <div class="todo-item"><input type="checkbox" onclick="toggleCheck(this)"><span>網卡 / ESIM 設定</span></div>
-        <div class="todo-item"><input type="checkbox" onclick="toggleCheck(this)"><span>牙刷牙膏 (韓國飯店通常不附)</span></div>
+        <h2>🎒 打包清單</h2>
+        <p>這邊可以放你的 Check List...</p>
     </div>
 
     <div id="page-money" class="container">
-        <h3>💸 記帳小幫手</h3>
-        <div class="total-banner">
-            總花費: <span id="total-display">0</span> TWD
-        </div>
-        
-        <div class="input-group">
-            <input type="text" id="item-name" placeholder="項目 (如: 咖啡)">
-        </div>
-        <div class="input-group">
-            <input type="number" id="item-price" placeholder="金額 (韓幣 KRW)">
-            <button class="add-btn" onclick="addExpense()">記帳</button>
-        </div>
-        <p style="font-size: 0.8rem; color: #666;">* 自動以匯率 0.024 換算台幣</p>
-
-        <div id="expense-list">
-            </div>
+        <h2>💰 記帳區</h2>
+        <p>這邊放記帳功能...</p>
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-item active-nav" onclick="switchPage('page-schedule', this)">📅 行程</div>
-        <div class="nav-item" onclick="switchPage('page-list', this)">✅ 清單</div>
-        <div class="nav-item" onclick="switchPage('page-money', this)">💰 算錢</div>
+    <div class="bottom-nav">
+        <div class="nav-item active-tab" onclick="switchPage('page-schedule', this)">
+            <span class="nav-icon">📅</span>
+            行程
+        </div>
+        <div class="nav-item" onclick="switchPage('page-list', this)">
+            <span class="nav-icon">🎒</span>
+            清單
+        </div>
+        <div class="nav-item" onclick="switchPage('page-money', this)">
+            <span class="nav-icon">💸</span>
+            算錢
+        </div>
     </div>
 
     <script>
-        // JavaScript: 這裡負責功能邏輯
-
-        // 1. 切換頁面功能
+        // 切換頁面功能
         function switchPage(pageId, navElement) {
             // 隱藏所有頁面
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
-            // 顯示選中頁面
+            // 顯示目標頁面
             document.getElementById(pageId).classList.add('active');
             
-            // 更新底部按鈕顏色
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active-nav'));
-            navElement.classList.add('active-nav');
-        }
-
-        // 2. 清單打勾樣式
-        function toggleCheck(checkbox) {
-            const text = checkbox.nextElementSibling;
-            if(checkbox.checked) {
-                text.classList.add('checked');
-            } else {
-                text.classList.remove('checked');
-            }
-        }
-
-        // 3. 記帳功能 (含匯率換算)
-        let totalTWD = 0;
-        const exchangeRate = 0.024; // 假設匯率
-
-        function addExpense() {
-            const nameInput = document.getElementById('item-name');
-            const priceInput = document.getElementById('item-price');
-            const list = document.getElementById('expense-list');
-            const totalDisplay = document.getElementById('total-display');
-
-            const name = nameInput.value;
-            const priceKRW = parseFloat(priceInput.value);
-
-            if(name === "" || isNaN(priceKRW)) {
-                alert("請輸入項目和金額喔！");
-                return;
-            }
-
-            // 計算台幣
-            const priceTWD = Math.round(priceKRW * exchangeRate);
-            totalTWD += priceTWD;
-
-            // 新增一筆紀錄到畫面
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'card';
-            itemDiv.style.borderLeft = "5px solid #4CAF50"; // 記帳用綠色
-            itemDiv.innerHTML = `
-                <div style="display:flex; justify-content:space-between;">
-                    <strong>${name}</strong>
-                    <span>₩${priceKRW}</span>
-                </div>
-                <div style="text-align:right; color:#888; font-size:0.9rem;">
-                    約 NT$ ${priceTWD}
-                </div>
-            `;
-            
-            // 插入到列表最上方
-            list.insertBefore(itemDiv, list.firstChild);
-
-            // 更新總金額
-            totalDisplay.innerText = totalTWD.toLocaleString();
-
-            // 清空輸入框
-            nameInput.value = '';
-            priceInput.value = '';
+            // 底部按鈕變色
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active-tab'));
+            navElement.classList.add('active-tab');
         }
     </script>
+
 </body>
 </html>
